@@ -1,0 +1,112 @@
+<div class="container">
+    <mat-card>
+        <mat-card-content class="mt-4">
+            <form [formGroup]="searchForm">
+                <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutWrap="wrap" fxLayoutAlign="center">
+                    <div fxFlex="100/3">
+                        <mat-form-field class="full-width pr-2">
+                            <mat-select required placeholder="Transaction Type" [formControl]="searchForm.controls['transType']">
+                                <mat-option value="1">Credit</mat-option>
+                                <mat-option value="2">Debit</mat-option>
+                                <mat-option value="3">Both</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="100/3">
+                        <mat-form-field class="full-width pr-2 pl-2">
+                            <input matInput required [matDatepicker]="picker1" placeholder="From Date" [formControl]="searchForm.controls['fromDate']">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="100/3">
+                        <mat-form-field class="full-width pl-2">
+                            <input matInput required [matDatepicker]="picker2" placeholder="To Date" [formControl]="searchForm.controls['toDate']">
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutWrap="wrap" fxLayoutAlign="center">
+                    <div fxFlex="100/3">
+                        <button mat-raised-button class="full-width" color="primary" [disabled]="searchForm.invalid" (click)="searchResult(false)">Search</button>
+                    </div>
+                    <div fxFlex="100/3">
+                        <button mat-raised-button class="full-width" color="accent" (click)="exportXlxs()">Export</button>
+                    </div>
+                    <div fxFlex="100/3">
+                        <button mat-raised-button class="full-width" color="warn" [disabled]="searchForm.invalid" (click)="cleatInput()">Clear</button>
+                    </div>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+    <mat-card>
+        <mat-card-content>
+            <table mdbTable #tableEl="mdbTable" class="z-depth-1">
+                <thead>
+                    <tr>
+                        <th [mdbTableSort]="elements" sortBy="id">
+                            Date Time
+                            <mdb-icon fas icon="sort"></mdb-icon>
+                        </th>
+                        <th [mdbTableSort]="elements" sortBy="id">
+                            User
+                            <mdb-icon fas icon="sort"></mdb-icon>
+                        </th>
+                        <th [mdbTableSort]="elements" sortBy="id">
+                            Description
+                            <mdb-icon fas icon="sort"></mdb-icon>
+                        </th>
+                        <th [mdbTableSort]="elements" sortBy="id">
+                            Credit
+                            <mdb-icon fas icon="sort"></mdb-icon>
+                        </th>
+                        <th [mdbTableSort]="elements" sortBy="id">
+                            Debit
+                            <mdb-icon fas icon="sort"></mdb-icon>
+                        </th>
+                        <th [mdbTableSort]="elements" sortBy="first.nick">
+                            Amount
+                            <mdb-icon fas icon="sort"></mdb-icon>
+                        </th>
+                        <th [mdbTableSort]="elements" sortBy="last">
+                            Balance
+                            <mdb-icon fas icon="sort"></mdb-icon>
+                        </th>
+                        <th [mdbTableSort]="elements" sortBy="handle">
+                            Remarks
+                            <mdb-icon fas icon="sort"></mdb-icon>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let el of elements; let i = index">
+                        <th *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.transactionDateTime}}</th>
+                        <th *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.transactionDoneUser}}</th>
+                        <th *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.transactionDesc}}</th>
+                        <th *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.credit}}</th>
+                        <th *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.debit}}</th>
+                        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.transactionAmount}}</td>
+                        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.balance}}</td>
+                        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.remarks}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutWrap="wrap" fxLayoutAlign="center">
+                <div fxFlex="100" style="text-align: center !important;">
+                    <mat-form-field class="pl-2">
+                        <mat-select [(value)]="selected" (selectionChange)="setPaginationPageSize($event.value)" placeholder="Page Size">
+                            <mat-option value="5">5</mat-option>
+                            <mat-option value="10">10</mat-option>
+                            <mat-option value="20">20</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div fxFlex="50">
+                    <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="elements"></mdb-table-pagination>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
